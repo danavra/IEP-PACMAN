@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <title>Pacman Game</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <style media="screen">
+
+        #hello_user{
+            background-color: lightskyblue;
+        }
+        body{
+            background-image: url("background.jpeg") ;
+            background-size: cover;
+
+        }
+        canvas{
+            /*width: 50%;*/
+            margin-right: 25%;
+            margin-left: 25%;
+            background-color: black;
+            /*outline: black 20px solid;*/
+            /*z-index: 1;*/
+        }
+        #canvas-wrapper{
+            background-image: url("background.jpeg") ;
+            background-size: cover;
+        }
+        #pacmangame{
+            background-image: url("background.jpeg") ;
+            background-size: cover;
+        }
+        #header-ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+        #footer-ul{
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+        li{
+      display: inline;
+      float: left;
+    }
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+        /* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
+        /* The Close Button */
+        .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+        .close:hover, .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+  </style>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+</head>
+
+<body>
+  <header class="navbar navbar-expand-lg navbar-dark bg-dark" id="header">
+      <div class="navbar-nav">
+        <ul id="header-ul">
+          <li>
+            <img src="https://www.smashbros.com/wiiu-3ds/sp/images/character/pac-man/main.png" alt="Pacman" width="46" height="48">
+          </li>
+          <li>
+            <h5 class="nav-item nav-link">Studens:</h5>
+          </li>
+          <li>
+            <h5 class="nav-item nav-link">Yaniv Leedon 200878627, Dan Avraham 204736961</h5>
+          </li>
+        </ul>
+      </div>
+    </header>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="navbar-nav" id="navtool">
+          <a class="navbar-brand" href="javascript: switch_display('welcome')">Welcome</a>
+          <a class="nav-item nav-link" id="nav-login" href="javascript: switch_display('login')">Login</a>
+          <a class="nav-item nav-link" id="nav-register" href="javascript: switch_display('register')">Register</a>
+          <a class="nav-item nav-link" href="javascript: modal_display(true)">About Us</a>
+          <a class="nav-item nav-link" id="nav-play" href="" style="display: none;">Set and Play</a>
+      </div>
+  </nav>
+
+  <div id="aboutModal" class="modal">
+      <div class="modal-content">
+          <span class="close" id="xclose">
+              <button class="btn btn-secondary" onclick="modal_display(false)">&times;</button>
+          </span>
+          <p>Yaniv Leedon, Dan Avraham <br>
+              We used jQuery for validating user's details <br>
+              when logging in or signing up.
+          </p>
+      </div>
+  </div>
+
+  <div id="logged_username" style="display: none;">
+      <h1 id="hello_user"></h1>
+  </div>
+
+  <div id="alreadyLogged" style="display: none;">
+      <h1 id="logged_already"></h1>
+      <button class="btn btn-danger" onclick="logout()">Logout</button>
+  </div>
+
+  <div id="welcome" class="jumbatron">
+    <h1>Welcome!</h1>
+    <h2 id="pls-login">Please log in or sign up</h2>
+    <br><br><br><br><br><br><br>
+      <button type="button" class="btn btn-info" id="wlc-play" name="btn_play" onclick="playGame()" style="display: none;">Setting and Play</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-success" id="wlc-login" name="btn_login" onclick="switch_display('login')">&nbsp;Login&nbsp;</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-primary" id="wlc-register" name="btn_register" onclick="switch_display('register')">Register</button>
+    <br><br>
+  </div>
+
+  <div id="login" style="display: none;">
+    <form method="POST" action="javascript: login()" id="login_form">
+          <label for="username">Username:</label>
+          <input type="text" name="username" id="login_username" placeholder="Username">
+
+        <br>
+
+          <label for="password">Password:</label>
+          <input type="password" name="password" id="login_password">
+
+        <br>
+
+          <button type="submit" class="btn btn-success" name="">Login</button>
+          <button type="button" class="btn btn-primary" name="btn_register" onclick="switch_display('register')">Register</button>
+        </form>
+  </div>
+
+  <div id="register" style="display: none;">
+      <form method="POST" action="javascript: register()" id="register_form">
+          <label for="username">Username:</label>
+          <input type="text" name="username" id="register_username" placeholder="Username" required>
+
+          <br>
+
+          <label for="password">Password</label>
+          <input type="password" name="password" id="register_password" required>
+
+          <br>
+
+          <label for="fname">First Name:</label>
+          <input type="text" name="fname" id="register_fname" placeholder="First Name" required>
+
+          <br>
+
+          <label for="lname">Last Name:</label>
+          <input type="text" name="lname" id="register_lname" placeholder="Last Name" required>
+
+          <br>
+
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="register_email" placeholder="Email" required>
+
+          <br>
+
+          <label>Date of Birth:</label> <br>
+          <label>Day</label>
+          <select class="" id="date_day" name="day_picker" required>Day</select>
+          <label>Month</label>
+          <select class="" id="date_month" name="month_picker" required>Month</select>
+          <label>Year</label>
+          <select class="" id="date_year" name="year_picker" required>Year</select>
+
+          <br>
+
+          <button type="submit" class="btn btn-primary" name="">Register</button>
+          <button type="button" class="btn btn-danger" name="back_to_welcome" onclick="cancel_registration()">Cancel</button>
+      </form>
+  </div>
+
+  <div id="pacmangame" style="display: none;">
+      <form id="pacmanSetup">
+
+          <label for="upKey">UP</label>
+          <input type="text" placeholder="Up" id="upKey" tabindex="0">
+          <br>
+          <label for="rightKey">RIGHT</label>
+          <input type="text" placeholder="Right" id="rightKey" tabindex="0">
+          <br>
+          <label for="downKey">DOWN</label>
+          <input type="text" placeholder="Down" id="downKey" tabindex="0">
+          <br>
+          <label for="leftKey">LEFT</label>
+          <input type="text" placeholder="Left" id="leftKey" tabindex="0">
+          <br>
+
+          <label for="foodAmount">amount of food: </label>
+          <input id="foodAmount" type="number" value="50" >
+          <br>
+          <label for="monsters">amount of monsters: </label>
+          <input id="monsters" type="number" value="1">
+          <br>
+          <label for="timer">match time limit: </label>
+          <input id="timer" type="number" value="60">
+
+          <br>
+          <input type="color" id="color1" name="head"
+                 value="#d4c700">
+          <label for="color1">5 points</label>
+          <input type="color" id="color2" name="head"
+                 value="#d30000">
+          <label for="color2">10 points</label>
+          <input type="color" id="color3" name="head"
+                 value="#00b200">
+          <label for="color3">15 points</label>
+          <br>
+          <input type="button" class="btn btn-outline-info" value="Random selection" onclick="setRandom()" style="padding-right: 2px">
+          <input type="button" class="btn btn-outline-success" value="Start playing" onclick="validate()" style="padding-left: 1px">
+
+      </form>
+
+      <div id="canvas-wrapper" style="display: none;">
+          <h1 style="text-align: center;">PACKMAN</h1>
+          <table>
+              <tr>
+                  <td>
+                      LIVES LEFT:
+                      <div id="lives"></div>
+                      SCORE:
+                      <input id="lblScore" type="text"/>
+                      <br/>
+                      TIME REMAINING:
+                      <input id="lblTime" type="text"/>
+
+                      <br>
+
+                      <input type="button" value="start new game" onclick="restartPressed()">
+                      <input type="button" value="settings" onclick="openSettings()">
+                  </td>
+                  <td>
+                      <canvas id="canvas" height="400" width="400" ></canvas>
+                  </td>
+              </tr>
+
+          </table>
+
+      </div>
+  </div>
+
+  <footer class="navbar navbar-expand-lg navbar-dark bg-dark" id="footer">
+      <div class="navbar-nav">
+        <ul id="footer-ul">
+          <li>
+            <h5 class="nav-item nav-link" >Assignment 2 IEP</h5>
+          </li>
+          <li>
+            <h5 class="nav-item nav-link">Contact Us:</h5>
+          </li>
+          <li>
+            <h5 class="nav-item nav-link">danavra@post.bgu.ac.il</h5>
+          </li>
+          <li>
+            <h5 class="nav-item nav-link">leedon@post.bgu.ac.il</h5>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+  <script src="pacman.js"></script>
+
+  <script src="administration.js"></script>
+
+</body>
+
+</html>
