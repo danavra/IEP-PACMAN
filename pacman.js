@@ -707,7 +707,7 @@ function UpdatePosition() {
         console.log("*********"+window.clearInterval(interval));
         console.log("*********"+window.clearInterval(badGuys));
         Draw();
-        if(score >= 150){
+        if(score >= 150 && !end_game){
             new Audio("Ta Da-SoundBible.com-1884170640.mp3").play();
             window.alert("WE HAVE A WINNER");
         }
